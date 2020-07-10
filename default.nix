@@ -238,7 +238,7 @@ in rec {
           fi
         '')
         workspaceDependenciesTransitive;
-    in stdenv.mkDerivation (builtins.removeAttrs attrs ["pkgConfig" "workspaceDependencies"] // {
+    in stdenv.mkDerivation (builtins.removeAttrs attrs ["yarnNix" "pkgConfig" "workspaceDependencies"] // {
       inherit src;
 
       name = baseName;
