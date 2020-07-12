@@ -68,6 +68,7 @@ in rec {
     pkgConfig ? {},
     preBuild ? "",
     workspaceDependencies ? [],
+    prependYarnInstall ? "",
   }:
     let
       offlineCache = importOfflineCache yarnNix;
@@ -119,7 +120,7 @@ in rec {
         sed -i -E '/resolved /{s|https://registry.yarnpkg.com/||;s|[@/:-]|_|g}' yarn.lock
 
         ${workspaceDependencyLinks}
-        yarn install ${lib.escapeShellArgs yarnFlags}
+        ${prependYarnInstall} yarn install ${lib.escapeShellArgs yarnFlags}
 
         ${lib.concatStringsSep "\n" postInstall}
 
@@ -195,6 +196,7 @@ in rec {
     extraBuildInputs ? [],
     publishBinsFor ? null,
     workspaceDependencies ? [],
+    prependYarnInstall ? "",
     ...
   }@attrs:
     let
@@ -207,7 +209,7 @@ in rec {
         name = "${safeName}-modules-${version}";
         preBuild = yarnPreBuild;
         workspaceDependencies = workspaceDependenciesTransitive;
-        inherit packageJSON pname version yarnLock yarnNix yarnFlags pkgConfig;
+        inherit packageJSON pname version yarnLock yarnNix yarnFlags pkgConfig prependYarnInstall;
       };
       publishBinsFor_ = unlessNull publishBinsFor [pname];
       linkDirFunction = ''
